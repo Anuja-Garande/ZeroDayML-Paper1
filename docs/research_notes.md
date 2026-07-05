@@ -84,3 +84,27 @@ Document why chosen metrics (Precision, Recall, F1, AUC-ROC, AUC-PR, FPR) are ap
 - [ ] Will enterprise and IoT datasets be modeled separately or in a unified feature space?
 - [ ] What is the appropriate anomaly threshold selection strategy for the autoencoder (fixed percentile vs. adaptive)?
 - [ ] How will dataset-specific biases (e.g., synthetic traffic generation artifacts) be addressed/discussed as threats to validity?
+
+
+
+
+## Zero-Day Holdout Strategy (Finalized)
+
+**Decision:** Zero-day evaluation is designed around **attack category holdout**, not temporal (day-based) holdout. This directly tests whether models trained purely on normal behavior can detect previously unseen attack types, rather than just testing on a different day's traffic.
+
+**Training set:** `BENIGN` traffic only, pooled across all 8 days of CIC-IDS2017 (~2.8M rows).
+
+**Zero-day test groups (CIC-IDS2017):**
+
+| Group | Attack Types | Approx. Rows |
+|-------|-------------|--------------|
+| DoS/DDoS family | DoS Hulk, DoS GoldenEye, DoS slowloris, DoS Slowhttptest, DDoS | ~375,000 |
+| Scanning/Recon | PortScan | ~159,000 |
+| Brute Force | FTP-Patator, SSH-Patator, Web Attack Brute Force | ~15,300 |
+| Web-based | XSS, SQL Injection | ~673 |
+| Botnet | Bot | ~1,966 |
+| Rare/severe (exploratory only, small sample) | Heartbleed, Infiltration | 47 |
+
+Each group is evaluated independently against the trained model, allowing per-attack-family performance breakdown rather than a single aggregate score. This supports a richer discussion in the manuscript (e.g., "the model detects volumetric DoS/DDoS well but struggles with low-signal attacks like Infiltration").
+
+**Rationale:** Attack-category holdout is a stronger test of genuine zero-day generalization than day-based holdout, since attack types are not confounded with which day they were captured.
