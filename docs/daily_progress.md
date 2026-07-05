@@ -1,3 +1,17 @@
+### Feature-Level Behavioral Differences — IoT Dataset (2026-07-05)
+
+| Feature | Benign (median) | Attack (median) |
+|---------|-----------------|------------------|
+| flow_duration | 26.39 | 0.256 |
+| Rate | 52.83 | 20.22 |
+| Tot size (bytes) | 246.8 | 101.2 |
+| IAT (inter-arrival time) | 0.053 | 83,254,140 |
+
+**Interpretation:** IoT attack traffic shows the OPPOSITE pattern from enterprise attack traffic — shorter flow duration, lower packet rate, smaller packets, but vastly larger inter-arrival times. This is consistent with flood-style attacks (DDoS/DoS) generating many short, bursty connection attempts rather than sustained connections, while benign IoT device traffic (telemetry, regular check-ins) is steadier and longer-lived.
+
+**Key implication:** Behavioral signatures of "attack" vs "normal" are domain-specific and not transferable between enterprise and IoT contexts — a feature pattern indicating attack in one domain can indicate normal behavior in the other. This strongly supports training and evaluating separate models per domain (enterprise vs. IoT) rather than a single unified model, and is a notable comparative finding for RQ2 in the manuscript.
+
+
 ### Feature-Level Behavioral Differences — Enterprise Dataset (2026-07-05)
 
 | Feature | Benign (median) | Attack (median) | Ratio |
