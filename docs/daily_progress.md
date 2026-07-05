@@ -60,3 +60,26 @@ Add a new entry at the top (reverse chronological order) for each working sessio
 ---
 
 *(Continue adding entries above this line as work progresses — most recent entry at the top is also acceptable; pick one convention and stay consistent.)*
+
+
+### 2026-07-05
+
+**Time spent:** ~2h
+
+**Worked on:**
+- Completed Phase 1: Downloaded CIC-IDS2017 (enterprise, 8 files, ~843MB) and CIC-IoT2023 sample (IoT, xxsmall, 508K rows) via Kaggle API in Google Colab.
+- Completed Phase 2: Cleaned both datasets — fixed column name whitespace, fixed label encoding issue, removed missing/infinite values (Flow Bytes/s, Flow Packets/s), removed 255,236 duplicate rows, dropped redundant/non-feature columns.
+- Finalized zero-day holdout strategy: attack-category holdout (not day-based), documented in research_notes.md.
+
+**Completed:**
+- Cleaned enterprise dataset: 2,572,640 rows x 78 columns, saved to data_interim/enterprise_cicids2017_cleaned.csv
+- Cleaned IoT dataset: 508,155 rows x 47 columns, saved to data_interim/iot_ciciot2023_cleaned.csv
+
+**Blockers / Issues:**
+- CIC official server no longer serves direct downloads (redirects to request form) — used Kaggle mirrors instead.
+- Using IoT "xxsmall" sample (508K rows) rather than full 13GB dataset for initial pipeline development; may scale up later.
+
+**Next steps:**
+- Begin Phase 3: Exploratory Data Analysis (EDA) on both cleaned datasets.
+
+**Phase:** Phase 2 — Data Cleaning (complete) → Phase 3 starting
