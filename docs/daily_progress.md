@@ -1,3 +1,14 @@
+### Feature-Level Behavioral Differences — Enterprise Dataset (2026-07-05)
+
+| Feature | Benign (median) | Attack (median) | Ratio |
+|---------|-----------------|------------------|-------|
+| Flow Duration (µs) | 32,817 | 6,031,838 | Attack ~184x longer |
+| Total Fwd Packets | 2 | 4 | Attack ~2x more packets |
+| Flow Bytes/s | 4,529 | 143 | Benign ~32x more throughput |
+| Fwd Packet Length Mean (bytes) | 38.0 | 8.7 | Benign ~4x larger packets |
+
+**Interpretation:** Attack traffic in CIC-IDS2017 tends toward long-duration, low-throughput, small-packet behavior — consistent with sustained scans, brute-force attempts, and flood-style attacks that maximize connection time while minimizing payload per packet. Benign traffic shows short-duration, high-throughput, larger-payload patterns typical of normal web/file transfer activity. This supports the core premise that "behavior" (not just content) meaningfully separates normal from malicious traffic, motivating the flow-level statistical feature approach used throughout this project.
+
 
 ## EDA Findings
 
