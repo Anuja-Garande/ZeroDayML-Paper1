@@ -1,3 +1,12 @@
+
+### Dimensionality Reduction — Enterprise Dataset (2026-07-05)
+
+- PCA (2 components) captured only 37.4% of variance, heavily skewed by outlier flows — linear projection is not sufficient to represent this data's structure.
+- UMAP (non-linear) revealed clearer cluster structure: distinct attack-type clusters visible as separate streaks/groups, with benign traffic forming its own dense clusters. Partial overlap exists between some benign and attack points in central regions, suggesting certain attacks behave similarly enough to normal traffic to be genuinely challenging to detect.
+
+**Implication:** Non-linear class separability supports the use of non-linear unsupervised models (e.g., deep autoencoder, Isolation Forest, LOF) over purely linear approaches (e.g., PCA-based anomaly scoring) for this detection task.
+
+
 ### Feature-Level Behavioral Differences — IoT Dataset (2026-07-05)
 
 | Feature | Benign (median) | Attack (median) |
