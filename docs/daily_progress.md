@@ -1,3 +1,9 @@
+
+## EDA Findings
+
+### Class Imbalance (2026-07-05)
+- Enterprise (CIC-IDS2017): 83.5% Benign / 16.5% Attack — realistic imbalance, ~2.15M benign rows available for training.
+- IoT (CIC-IoT2023, xxsmall sample): 3.5% Benign / 96.5% Attack — inverted imbalance due to dense attack campaign design in data collection, not representative of real-world IoT traffic ratios. Still ~17,780 benign rows available for training. To be discussed as a dataset limitation in the manuscript.
 # Daily Progress Log — ZeroDayML-Paper1
 
 A lightweight, chronological log of day-to-day research activity. This complements `experiment_log.md` (formal experiment tracking) and `research_notes.md` (conceptual/methodological notes) by capturing granular task-level progress, blockers, and next actions — useful for PhD supervisory meetings and progress reports.
