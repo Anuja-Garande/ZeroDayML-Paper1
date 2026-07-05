@@ -1,3 +1,12 @@
+### Dimensionality Reduction — IoT Dataset (2026-07-05)
+
+- PCA (2 components) captured only 28.2% of variance — similar limitation to enterprise data.
+- UMAP showed HEAVY overlap between benign and attack points throughout the embedding space, in sharp contrast to the enterprise dataset's more distinguishable attack clusters. Only a few small regions show partial separation.
+
+**Key comparative finding (Enterprise vs. IoT):** Attack traffic in the IoT dataset is far less visually separable from benign traffic than in the enterprise dataset, even under non-linear dimensionality reduction. This suggests IoT attack detection is a substantially harder problem at the individual-flow level — likely because benign IoT device traffic is already bursty/repetitive by nature, reducing the contrast with flood-style attacks compared to enterprise traffic.
+
+**Implication for RQ2 and methodology:** This finding directly motivates the use of a Deep Autoencoder over simpler linear/distance-based methods — if strong non-linear visualization (UMAP) still shows substantial class overlap in 2D, the true separating signal likely requires learning complex combinations across the full feature space, which shallow 2D projections cannot capture. This also predicts that baseline models (Isolation Forest, One-Class SVM, LOF) may underperform on IoT data relative to enterprise data, an empirical question to test in Phase 5-7.
+
 
 ### Dimensionality Reduction — Enterprise Dataset (2026-07-05)
 
