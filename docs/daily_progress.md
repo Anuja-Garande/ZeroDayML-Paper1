@@ -1,3 +1,38 @@
+
+## EXP-001: Isolation Forest Baseline — Enterprise Dataset
+
+- **Date:** 2026-07-05
+- **Model:** Isolation Forest (n_estimators=100, contamination='auto')
+- **Dataset:** CIC-IDS2017 (enterprise)
+- **Training:** 1,717,519 benign rows only
+
+### Results by Zero-Day Attack Group
+
+| Attack Group | Precision | Recall | F1 | AUC-ROC | AUC-PR | FPR |
+|---|---|---|---|---|---|---|
+| dos_ddos | 0.900 | 0.778 | 0.835 | 0.896 | 0.871 | 0.087 |
+| scanning | 0.032 | 0.003 | 0.005 | 0.470 | 0.443 | 0.086 |
+| brute_force | 0.082 | 0.007 | 0.013 | 0.738 | 0.622 | 0.080 |
+| web_based | 0.265 | 0.027 | 0.049 | 0.653 | 0.608 | 0.074 |
+| botnet | 0.228 | 0.023 | 0.041 | 0.556 | 0.524 | 0.076 |
+| rare_severe | 0.977 | 0.894 | 0.933 | 0.967 | 0.975 | 0.021 |
+
+### Key Finding: Anomaly Score Direction Analysis
+
+Investigated why scanning/brute_force/web_based/botnet performed poorly by comparing mean anomaly scores (benign vs. attack):
+
+| Group | Benign Score | Attack Score | Difference |
+|---|---|---|---|
+| scanning | 0.374 | 0.340 | -0.034 (inverted) |
+| botnet | 0.374 | 0.355 | -0.019 (inverted) |
+| brute_force | 0.373 | 0.399 | +0.026 (correct, weak) |
+| web_based | 0.373 | 0.378 | +0.005 (correct, negligible) |
+
+**Interpretation:** DoS/DDoS and rare/severe attacks (Heartbleed, Infiltration) are strongly and correctly detected by Isolation Forest — these attacks produce flow statistics (duration, throughput) genuinely distinct from normal traffic. However, scanning and botnet attacks are systematically ranked as MORE normal than actual benign traffic by the isolation mechanism — likely because their short, simple, repetitive flow patterns are trivially "isolated" in ways the algorithm associates with typical behavior. Brute force and web-based attacks show correct-direction but very weak separation, suggesting the signal exists but requires a more expressive model (e.g., deep autoencoder) to exploit reliably.
+
+**Implication:** Isolation Forest is NOT a reliable general-purpose zero-day detector across all attack families — performance is highly attack-type-dependent. This motivates comparing against One-Class SVM and LOF (different inductive biases) and ultimately the Deep Autoencoder as the primary proposed method.
+
+
 ## Phase 4 — Feature Engineering (Completed 2026-07-05)
 
 ### Zero-Day Test Groups Finalized
