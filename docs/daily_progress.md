@@ -1,3 +1,28 @@
+## EXP-004, EXP-005, EXP-006: Baseline Models — IoT Dataset
+
+- **Date:** 2026-07-05
+- **Models:** Isolation Forest, One-Class SVM, LOF (same hyperparameters as enterprise experiments)
+- **Dataset:** CIC-IoT2023 (xxsmall sample)
+- **Training:** 14,400 benign rows (full set, no subsampling needed)
+
+### Results Summary (AUC-ROC by attack group, best model bolded)
+
+| Attack Group | Isolation Forest | One-Class SVM | LOF |
+|---|---|---|---|
+| ddos | 0.883 | 0.903 | **0.953** |
+| dos | 0.899 | 0.960 | **0.979** |
+| mirai_botnet | 0.972 | 0.988 | **0.998** |
+| reconnaissance | 0.683 | 0.695 | **0.753** |
+| spoofing_mitm | 0.768 | 0.792 | **0.797** |
+| brute_force | 0.584 | 0.687 | **0.764** |
+| web_based | 0.683 | **0.775** | 0.753 |
+| other_malware | 0.699 | **0.837** | 0.794 |
+
+**Key Finding 1 — Contradicts Phase 3 EDA Prediction:** UMAP visualization (Phase 3) showed heavy benign/attack overlap for IoT, leading to a prediction that baselines would underperform on IoT vs. enterprise. This was NOT confirmed — all IoT baseline results are substantially stronger and more consistent than enterprise results, with every attack group achieving AUC-ROC > 0.68 for at least one model (compare to enterprise, where 2 of 6 groups fell below or near random guessing). This suggests 2D non-linear projections (UMAP) can understate true separability that exists in the full high-dimensional feature space, an important methodological caveat for the paper.
+
+**Key Finding 2 — Cross-Domain Consistency:** LOF is again the most frequent best-performing model (6 of 8 IoT groups; 3 of 6 enterprise groups), reinforcing that local density-based anomaly detection is particularly well-suited to behavior-based zero-day detection across both enterprise and IoT domains.
+
+**Key Finding 3 — Mirai/Botnet near-perfect detection:** All three models achieve AUC-ROC > 0.97 on mirai_botnet, likely because Mirai-based attacks produce highly distinctive, repetitive flooding behavior very unlike normal IoT device telemetry.
 ## EXP-003: Local Outlier Factor Baseline — Enterprise Dataset
 
 - **Date:** 2026-07-05
