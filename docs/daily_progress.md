@@ -1,3 +1,40 @@
+## EXP-003: Local Outlier Factor Baseline — Enterprise Dataset
+
+- **Date:** 2026-07-05
+- **Model:** LOF (n_neighbors=20, contamination='auto', novelty=True)
+- **Dataset:** CIC-IDS2017 (enterprise)
+- **Training:** Same 20,000 row benign subsample as One-Class SVM
+
+### Results by Zero-Day Attack Group
+
+| Attack Group | Precision | Recall | F1 | AUC-ROC | AUC-PR | FPR |
+|---|---|---|---|---|---|---|
+| dos_ddos | 0.856 | 0.938 | 0.895 | 0.934 | 0.882 | 0.157 |
+| scanning | 0.743 | 0.458 | 0.567 | 0.705 | 0.671 | 0.159 |
+| brute_force | 0.665 | 0.308 | 0.421 | 0.661 | 0.709 | 0.156 |
+| web_based | 0.331 | 0.085 | 0.135 | 0.310 | 0.395 | 0.171 |
+| botnet | 0.708 | 0.387 | 0.500 | 0.663 | 0.594 | 0.160 |
+| rare_severe | 0.750 | 0.638 | 0.690 | 0.776 | 0.777 | 0.213 |
+
+## Baseline Comparison Summary (All 3 Models, AUC-ROC)
+
+| Attack Group | Isolation Forest | One-Class SVM | LOF | Best |
+|---|---|---|---|---|
+| dos_ddos | 0.896 | 0.895 | 0.934 | LOF |
+| scanning | 0.470 | 0.537 | 0.705 | LOF |
+| brute_force | 0.738 | 0.439 | 0.661 | Isolation Forest |
+| web_based | 0.653 | 0.664 | 0.310 | One-Class SVM |
+| botnet | 0.556 | 0.556 | 0.663 | LOF |
+| rare_severe | 0.967 | 0.960 | 0.776 | Isolation Forest |
+
+**Key Findings:**
+1. No single baseline dominates across all attack types — model choice matters significantly depending on attack behavior.
+2. LOF (local density-based) substantially outperforms global methods (Isolation Forest, One-Class SVM) on scanning and botnet attacks, suggesting these attacks form locally-distinguishable but globally-overlapping patterns.
+3. LOF consistently shows higher false positive rates (15.6-21.3%) than Isolation Forest/OC-SVM (4.3-8.7%), reflecting a precision/recall tradeoff — LOF catches more attacks but raises more false alarms.
+4. Isolation Forest performs best on rare_severe (Heartbleed/Infiltration) and competitively on brute_force, suggesting global isolation is well-suited to attacks with genuinely extreme statistical outlier behavior.
+5. web_based attacks remain difficult for all three baselines (best AUC-ROC only 0.664), representing the hardest attack category in this evaluation — a candidate for the Deep Autoencoder to potentially improve upon in Phase 6.
+
+**Conclusion:** These baseline results establish a strong empirical foundation for comparison. No classical unsupervised method provides consistently reliable zero-day detection across all attack families, motivating the Deep Autoencoder as a potentially more robust, non-linear alternative in Phase 6.
 ## EXP-002: One-Class SVM Baseline — Enterprise Dataset
 
 - **Date:** 2026-07-05
