@@ -1,3 +1,50 @@
+
+## EXP-007: Deep Autoencoder — Enterprise Dataset
+
+- **Date:** 2026-07-05
+- **Architecture:** 77 → 64 → 32 → 16 (bottleneck) → 32 → 64 → 77, ReLU activations, linear output, Adam optimizer, MSE loss
+- **Training:** 1,717,519 benign rows, early stopping (patience=5), best epoch 16, final val_loss=0.0972
+- **Threshold:** 95th percentile of benign validation reconstruction error (0.0353)
+
+### Results by Zero-Day Attack Group (95th percentile threshold)
+
+| Attack Group | Precision | Recall | F1 | AUC-ROC | AUC-PR | FPR |
+|---|---|---|---|---|---|---|
+| dos_ddos | 0.941 | 0.794 | 0.861 | 0.946 | 0.955 | 0.050 |
+| scanning | 0.438 | 0.039 | 0.071 | 0.775 | 0.657 | 0.050 |
+| brute_force | 0.145 | 0.008 | 0.015 | 0.774 | 0.632 | 0.047 |
+| web_based | 0.408 | 0.030 | 0.055 | 0.590 | 0.510 | 0.043 |
+| botnet | 0.346 | 0.023 | 0.043 | 0.686 | 0.595 | 0.044 |
+| rare_severe | 0.955 | 0.894 | 0.923 | 0.970 | 0.973 | 0.043 |
+
+### Four-Model AUC-ROC Comparison
+
+| Attack Group | Isolation Forest | One-Class SVM | LOF | Autoencoder | Best |
+|---|---|---|---|---|---|
+| dos_ddos | 0.896 | 0.895 | 0.934 | 0.946 | Autoencoder |
+| scanning | 0.470 | 0.537 | 0.705 | 0.775 | Autoencoder |
+| brute_force | 0.738 | 0.439 | 0.661 | 0.774 | Autoencoder |
+| web_based | 0.653 | 0.664 | 0.310 | 0.590 | One-Class SVM |
+| botnet | 0.556 | 0.556 | 0.663 | 0.686 | Autoencoder |
+| rare_severe | 0.967 | 0.960 | 0.776 | 0.970 | Autoencoder |
+
+**Key Finding 1:** The Deep Autoencoder achieves the best AUC-ROC on 5 of 6 attack groups, confirming it as the strongest ranking model overall and validating the core hypothesis that non-linear representation learning improves zero-day generalization over classical baselines.
+
+**Key Finding 2 — Threshold Sensitivity Analysis:** Despite improved AUC-ROC, F1/Recall remain very low for scanning, brute_force, and botnet at the 95th percentile threshold. Testing thresholds from 90th-99th percentile:
+
+| Percentile | scanning F1 | brute_force F1 | botnet F1 |
+|---|---|---|---|
+| 90th | 0.212 | 0.022 | 0.066 |
+| 95th | 0.071 | 0.015 | 0.043 |
+| 97th | 0.051 | 0.015 | 0.044 |
+| 99th | 0.003 | 0.014 | 0.044 |
+
+Lowering the threshold (accepting more false positives) improves recall moderately for scanning (best at 90th percentile: recall=0.131) but barely moves brute_force and botnet regardless of threshold — indicating substantial reconstruction-error overlap between benign and these attack types that a single global threshold cannot resolve.
+
+**Interpretation:** The autoencoder learns a genuinely better anomaly RANKING (AUC-ROC) for hard attack types than classical baselines, but a single fixed decision threshold is insufficient to convert this ranking improvement into reliable classification for scanning/brute_force/botnet attacks. This points to two important directions for discussion: (1) per-attack-type or adaptive thresholding strategies, and (2) the need for richer/attack-specific features beyond the current 77-feature flow statistics to achieve operationally useful recall on these subtle attack types.
+
+**Conclusion:** The Deep Autoencoder is empirically the strongest single model across attack types by ranking quality (AUC-ROC), directly supporting the core thesis, while also revealing an honest, important limitation regarding threshold-based operationalization for low-signal attacks — a valuable, nuanced contribution for the Discussion section rather than a simple "our model wins" narrative.
+
 # Experiment Log — ZeroDayML-Paper1
 
 This document tracks every formal experiment run for this project, ensuring full reproducibility and traceability from hypothesis → configuration → result. Every entry should correspond to a specific, reproducible run (ideally tied to a config file in `config/` and a git commit hash).
