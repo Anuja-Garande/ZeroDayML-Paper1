@@ -1,4 +1,35 @@
 
+## EXP-008: Deep Autoencoder — IoT Dataset
+
+- **Date:** 2026-07-05
+- **Architecture:** 46 → 32 → 16 → 8 (bottleneck) → 16 → 32 → 46, ReLU/linear, Adam, MSE loss
+- **Training:** 14,400 benign rows, early stopping (patience=10), best epoch 62, final val_loss=0.1092
+- **Threshold:** 95th percentile of benign validation reconstruction error (0.1508)
+
+### Results by Zero-Day Attack Group
+
+| Attack Group | Precision | Recall | F1 | AUC-ROC | AUC-PR | FPR |
+|---|---|---|---|---|---|---|
+| ddos | 0.999 | 0.923 | 0.959 | 0.977 | 0.999 | 0.050 |
+| dos | 0.997 | 0.974 | 0.986 | 0.990 | 0.999 | 0.050 |
+| mirai_botnet | 0.997 | 0.991 | 0.994 | 0.995 | 0.999 | 0.050 |
+| reconnaissance | 0.994 | 0.399 | 0.569 | 0.767 | 0.986 | 0.050 |
+| spoofing_mitm | 0.985 | 0.330 | 0.494 | 0.803 | 0.973 | 0.050 |
+| brute_force | 0.940 | 0.215 | 0.350 | 0.765 | 0.910 | 0.050 |
+| web_based | 0.972 | 0.287 | 0.443 | 0.764 | 0.946 | 0.050 |
+| other_malware | 0.878 | 0.370 | 0.521 | 0.802 | 0.798 | 0.051 |
+
+### Four-Model AUC-ROC Comparison (IoT)
+
+| Attack Group | Isolation Forest | One-Class SVM | LOF | Autoencoder | Best |
+|---|---|---|---|---|---|
+| ddos | 0.883 | 0.903 | 0.953 | 0.977 | Autoencoder |
+| dos | 0.899 | 0.960 | 0.979 | 0.990 | Autoencoder |
+| mirai_botnet | 0.972 | 0.988 | 0.998 | 0.995 | LOF |
+| reconnaissance | 0.683 | 0.695 | 0.753 | 0.767 | Autoencoder |
+| spoofing_mitm
+
+
 ## EXP-007: Deep Autoencoder — Enterprise Dataset
 
 - **Date:** 2026-07-05
