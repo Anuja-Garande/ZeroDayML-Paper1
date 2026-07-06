@@ -1,3 +1,20 @@
+## Phase 4 — Feature Engineering (Completed 2026-07-05)
+
+### Zero-Day Test Groups Finalized
+
+**Enterprise (CIC-IDS2017):** 6 groups — dos_ddos (321,759), scanning (90,694), brute_force (10,620), web_based (673), botnet (1,948), rare_severe (47)
+
+**IoT (CIC-IoT2023):** 8 groups — ddos (216,000), dos (72,000), mirai_botnet (54,000), reconnaissance (74,262), spoofing_mitm (36,000), brute_force (13,064), web_based (21,611), other_malware (3,218)
+
+### Train/Validation Split
+- Enterprise: 1,717,519 train / 429,380 validation (benign only, 80/20 split)
+- IoT: 14,400 train / 3,600 validation (benign only, 80/20 split) — small benign pool due to dataset's inverted class imbalance noted in EDA
+
+### Scaling
+- StandardScaler fit exclusively on benign training data for each domain (no leakage from attack or validation data)
+- Enterprise: 77
+
+
 ### Dimensionality Reduction — IoT Dataset (2026-07-05)
 
 - PCA (2 components) captured only 28.2% of variance — similar limitation to enterprise data.
