@@ -1,3 +1,31 @@
+## EXP-002: One-Class SVM Baseline — Enterprise Dataset
+
+- **Date:** 2026-07-05
+- **Model:** One-Class SVM (kernel='rbf', nu=0.05, gamma='scale')
+- **Dataset:** CIC-IDS2017 (enterprise)
+- **Training:** 20,000 row subsample of benign data (full dataset infeasible due to O(n²-n³) SVM scaling)
+
+### Results by Zero-Day Attack Group
+
+| Attack Group | Precision | Recall | F1 | AUC-ROC | AUC-PR | FPR |
+|---|---|---|---|---|---|---|
+| dos_ddos | 0.939 | 0.797 | 0.862 | 0.895 | 0.923 | 0.052 |
+| scanning | 0.226 | 0.015 | 0.029 | 0.537 | 0.465 | 0.053 |
+| brute_force | 0.024 | 0.001 | 0.002 | 0.439 | 0.455 | 0.049 |
+| web_based | 0.377 | 0.030 | 0.055 | 0.664 | 0.543 | 0.049 |
+| botnet | 0.398 | 0.034 | 0.062 | 0.556 | 0.496 | 0.051 |
+| rare_severe | 0.952 | 0.851 | 0.899 | 0.960 | 0.966 | 0.043 |
+
+### Cross-Model Comparison (Isolation Forest vs. One-Class SVM)
+
+Both models show a nearly identical performance pattern across attack types despite using entirely different algorithmic approaches (tree-based isolation vs. kernel-based boundary estimation):
+- **Strong on:** dos_ddos, rare_severe (both AUC-ROC > 0.89)
+- **Weak on:** scanning, brute_force, web_based, botnet (AUC-ROC 0.44-0.66)
+
+**Key Interpretation:** This cross-algorithm consistency suggests the difficulty is rooted in the underlying data/feature representation, not a weakness specific to either algorithm. DoS/DDoS and severe/rare attacks produce genuinely distinct flow-level behavioral signatures; scanning/brute-force/web/botnet attacks overlap substantially with benign traffic in the current 77-feature space. This motivates the need for a more expressive model (Deep Autoencoder) capable of learning non-linear feature interactions, per Phase 6.
+
+
+
 
 ## EXP-001: Isolation Forest Baseline — Enterprise Dataset
 
