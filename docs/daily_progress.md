@@ -1,3 +1,15 @@
+### 2026-07-05 (continued)
+
+**Worked on:**
+- Completed Phase 5 for IoT dataset: trained and evaluated Isolation Forest, One-Class SVM, LOF across all 8 IoT zero-day attack groups.
+
+**Completed:**
+- EXP-004, EXP-005, EXP-006 logged in experiment_log.md
+- IoT baseline comparison chart and CSV saved
+
+**Key finding:** IoT baselines significantly outperformed the EDA-based prediction (all AUC-ROC > 0.68), contradicting the UMAP-based expectation of high difficulty. LOF remains the most consistent top performer across both domains (6/8 IoT groups, 3/6 enterprise groups).
+
+**Phase:** Phase 5 — Baseline Models (fully complete, both domains) → Phase 6 starting
 ## EXP-004, EXP-005, EXP-006: Baseline Models — IoT Dataset
 
 - **Date:** 2026-07-05
